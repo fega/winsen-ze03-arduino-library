@@ -8,22 +8,29 @@
 #define WinsenZE03_h
 
 #include "Arduino.h"
+#define CO 1
+#define SO2 2
+#define NO2 2
+#define O2 2
+#define NH3 1
+#define H2S 1
+#define HF 1
+#define CL2 2
+#define O3 2
 
+#define QA false
+#define ACTIVE true
 
 class WinsenZE03
 {
   public:
-    WinsenZE03(USARTClass *ser, int type);
-    WinsenZE03(UARTClass *ser, int type);
-    void begin();
-    void setAsContinuous();
-    void setAsManual();
+    WinsenZE03();
+    void begin(Stream *ser, int type);
+    void setAs(bool active);
     float readManual();
     float readContinuous();
   private:
-    void init();
-    USARTClass *_serial; //Serial1 - Serial3 are USARTClass objects.
-    UARTClass *_serial0;
+    Stream *_s; //Serial1 - Serial3 are USARTClass objects.
     int _type;
 };
 
