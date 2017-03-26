@@ -48,10 +48,10 @@ O3
 ### WinsenZE03.setAs(ACTIVE || QA)
 Sets the sensor to Active `.setAs(ACTIVE)`  or Question and Answer mode `.setAs(QA)`
 ### WinsenZE03.readManual()
-Reads the sensor in QA mode and returns a Float with the result
+Reads the sensor in QA mode and returns a Float with the result, if the read process suffers a problem, it returns -1
 
 ### WinsenZE03.readContinuous()
-Reads the sensor in active mode and returns a Float with the result if Serial data is available
+Reads the sensor in active mode and returns a Float with the result if Serial data is available, if the read process suffers a problem, it returns -1
 
 ## License
 
