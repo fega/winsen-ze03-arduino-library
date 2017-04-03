@@ -11,11 +11,10 @@ WinsenZE03 sensor;
 
 
 void setup() {
-	sensor.begin(&Serial3, CO);
   Serial3.begin(9600);
-	sensor.setAs(QA);
   Serial.begin(9600);
-
+  sensor.begin(&Serial3, CO);
+	sensor.setAs(QA);
 }
 void loop() {
  float ppm = sensor.readManual();

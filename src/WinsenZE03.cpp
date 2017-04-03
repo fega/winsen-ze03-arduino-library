@@ -18,16 +18,20 @@ void WinsenZE03::begin(Stream *ser, int type){
 }
 
 void WinsenZE03::setAs(bool active){
-  byte setConfig[] = {0xFF,0x01, 0x78, 0x03, 0x00, 0x00, 0x00, 0x00, 0x83};
+  byte setConfig[] = {0xFF, 0x01, 0x78, 0x04, 0x00, 0x00, 0x00, 0x00, 0x83};//QA config
+  byte response[9] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
   if (active){
     setConfig[3] =0x03;
-  }else{
-    setConfig[3] =0x04;
+    setConfig[8] =0x84;
   }
   _s->write(setConfig,sizeof(setConfig));
   // Wait for the response
-  delay(1000);
+  delay(2000);
   //Flush the incomming buffer
+  if (_s->available() > 0) {
+    _s->readBytes(response,9);
+  }
   while(_s->available()>0){
     byte c = _s->read();
   }
@@ -45,25 +49,34 @@ float WinsenZE03::readContinuous(){
 
 float WinsenZE03::readManual(){
   float ppm;
-  byte petition[] = {0xFF,0x01, 0x78, 0x03, 0x00, 0x00, 0x00, 0x00, 0x84};// Petition to get a single result
+  byte petition[] = {0xFF,0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};// Petition to get a single result
   byte measure[8]={0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// Space for the response
   _s->write(petition,sizeof(petition));
-  delay(2000);
-
+  delay(1500);
+  // read
   if (_s->available() > 0) {
     _s->readBytes(measure,9);
-    if (measure[0]==0xff && measure[1]==0x78){
-      _s->readBytes(measure,9);
+  }
+  // calculate
+  if (measure[0]==0xff && measure[1]==0x86){
+    ppm = measure[2]*256+measure[3];// this formula depends of the sensor is in the dataSheet
+    if (_type == 2){
+      ppm = ppm*0.1;
     }
-
-    if (measure[0]==0xff && measure[1]==0x86){
-      ppm = measure[2]*256+measure[3];// this formula depends of the sensor is in the dataSheet
-      if (_type == 2){
-        ppm = ppm*0.1;
-      }
-    }else{
-      ppm=-1;
-    }
+  }else{
+    ppm=-1;
   }
   return ppm;
+}
+
+void WinsenZE03::debugPrint(byte arr[]){
+  Serial.print(arr[0],HEX);Serial.print(" ");
+  Serial.print(arr[1],HEX);Serial.print(" ");
+  Serial.print(arr[2],HEX);Serial.print(" ");
+  Serial.print(arr[3],HEX);Serial.print(" ");
+  Serial.print(arr[4],HEX);Serial.print(" ");
+  Serial.print(arr[5],HEX);Serial.print(" ");
+  Serial.print(arr[6],HEX);Serial.print(" ");
+  Serial.print(arr[7],HEX);Serial.print(" ");
+  Serial.println(arr[8],HEX);
 }
