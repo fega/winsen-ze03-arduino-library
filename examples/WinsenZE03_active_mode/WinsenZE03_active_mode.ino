@@ -10,13 +10,23 @@
 WinsenZE03 sensor;
 
 void setup() {
-	sensor.begin(&Serial3, CO);
-  Serial3.begin(9600);
-	sensor.setAs(ACTIVE);
+
   Serial.begin(9600);
+  Serial2.begin(9600);
+  sensor.begin(&Serial2, CO);
+  if (sensor.setAs(ACTIVE))
+  {
+    Serial.println("Set Mode Sucess");
+  }
+  else
+  {
+    Serial.println("Set Mode Fail");
+  }
 
 }
 void loop() {
- float ppm = sensor.readContinuous();
- Serial.println(ppm);
+  float ppm = sensor.readContinuous();
+  Serial.print("CO: ");
+  Serial.print(ppm);
+  Serial.println(" PPM");
 }
