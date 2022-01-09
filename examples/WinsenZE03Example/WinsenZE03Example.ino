@@ -11,21 +11,12 @@ WinsenZE03 sensor;
 
 
 void setup() {
-  Serial2.begin(9600);
+  Serial3.begin(9600);
   Serial.begin(9600);
-  sensor.begin(&Serial2, CO);
-  if (sensor.setAs(QA))
-  {
-    Serial.println("Set Mode Sucess");
-  }
-  else
-  {
-    Serial.println("Set Mode Fail");
-  }
+  sensor.begin(&Serial3, CO);
+	sensor.setAs(QA);
 }
 void loop() {
-  float ppm = sensor.readManual();  // will return -1 if CRC fails and -2 if timeout
-  Serial.print("CO: ");
-  Serial.print(ppm);
-  Serial.println(" PPM");
+ float ppm = sensor.readManual();
+ Serial.println(ppm);
 }

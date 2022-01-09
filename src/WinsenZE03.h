@@ -18,8 +18,6 @@
 #define CL2 2
 #define O3 2
 
-#define timeout 1500  // default timeout of 1.5sec
-
 #define QA false
 #define ACTIVE true
 
@@ -28,12 +26,11 @@ class WinsenZE03
   public:
     WinsenZE03();
     void begin(Stream *ser, int type);
-    bool setAs(bool active);
-    float readManual(); 		// will return -1 if CRC fails and -2 if timeout
-    float readContinuous();		// will return -1 if CRC fails or timeout
+    void setAs(bool active);
+    float readManual();
+    float readContinuous();
   private:
     void debugPrint(byte arr[]);
-    bool CRC(unsigned char *i, unsigned char ln); // to check the incoming data is valid or not.
     Stream *_s; //Serial1 - Serial3 are USARTClass objects.
     int _type;
 };
